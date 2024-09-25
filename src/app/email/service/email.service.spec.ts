@@ -1,4 +1,8 @@
-import { EmailService, SendEmailInput } from "@/app/email/service/email.service";
+import {
+	EmailService,
+	SEND_EMAIL_SUCCESS_RESPONSE,
+	SendEmailInput,
+} from "@/app/email/service/email.service";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Test } from "@nestjs/testing";
 
@@ -48,7 +52,11 @@ describe("EmailService", () => {
 				html: "<p>Sua fatura chegou!!!</p>",
 			};
 
-			jest.spyOn(mailerService, "sendMail").mockReturnValueOnce(Promise.resolve(true));
+			jest.spyOn(mailerService, "sendMail").mockReturnValueOnce(
+				Promise.resolve({
+					response: SEND_EMAIL_SUCCESS_RESPONSE,
+				}),
+			);
 
 			// Act
 			const result = await emailService.sendEmail(sendEmailInput);

@@ -47,14 +47,7 @@
 					"fix": "safe",
 					"level": "warn"
 				},
-				"useNamingConvention": {
-					"fix": "safe",
-					"level": "warn",
-					"options": {
-						"enumMemberCase": "CONSTANT_CASE",
-						"strictCase": false
-					}
-				}
+				"useNamingConvention": "off"
 			}
 		}
 	}

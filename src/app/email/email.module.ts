@@ -1,26 +1,34 @@
 import { EmailService } from "@/app/email/service/email.service";
+import { EnvironmentVariables } from "@/config/env/env-schema";
+import { EnvModule } from "@/config/env/env.module";
 import { MailerModule } from "@nestjs-modules/mailer";
-
 import { Module } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { EmailController } from "./email.controller";
 
 @Module({
 	imports: [
-		MailerModule.forRoot({
-			transport: {
-				host: "smtp.mailgun.org",
-				secure: false,
-				port: 587,
-				auth: {
-					user: "postmaster@sandboxa8912999cabc4f35816e99117f9d3f3b.mailgun.org",
-					pass: "14f4c616825c48ac95a062784e02776e-1b5736a5-45712362",
+		MailerModule.forRootAsync({
+			imports: [EnvModule],
+			inject: [ConfigService],
+			useFactory: (configService: ConfigService<EnvironmentVariables>) => ({
+				transport: {
+					host: configService.get("EMAIL_HOST"),
+					secure: false,
+					port: configService.get("EMAIL_PORT"),
+					auth: {
+						user: configService.get("EMAIL_USER"),
+						pass: configService.get("EMAIL_PASSWORD"),
+					},
+					ignoreTLS: true,
 				},
-				ignoreTLS: true,
-			},
-			defaults: {
-				from: '"',
-			},
+				defaults: {
+					from: '"',
+				},
+			}),
 		}),
 	],
 	providers: [EmailService],
+	controllers: [EmailController],
 })
 export class EmailModule {}
