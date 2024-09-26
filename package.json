@@ -8,26 +8,37 @@
   "scripts": {
     "build": "nest build",
     "start": "nest start",
-    "dev": "nest start --watch",
+    "dev": "NODE_ENV=development nest start --watch",
+    "test": "NODE_ENV=test jest",
+    "test:watch": "NODE_ENV=test jest --watch",
     "format": "biome format --write src",
     "lint": "pnpm biome lint --write src",
-    "test": "NODE_ENV=test jest",
-    "test:watch": "NODE_ENV=test jest --watch"
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
+    "typeorm:generate": "npm run typeorm migration:generate -- -d ./typeorm.config.ts",
+    "typeorm:migrate": "npm run typeorm -- migration:create",
+    "typeorm:migrate:run": "npm run typeorm migration:run -- -d ./typeorm.config.ts",
+    "typeorm:migrate:revert": "npm run typeorm migration:revert -- -d ./typeorm.config.ts"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/typeorm": "^10.0.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "dotenv": "^16.4.5",
     "nodemailer": "^6.9.15",
+    "pg": "^8.13.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "@nestjs/config": "^3.2.3"
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.2",
+    "@faker-js/faker": "^9.0.2",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",

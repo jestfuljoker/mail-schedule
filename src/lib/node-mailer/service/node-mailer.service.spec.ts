@@ -1,19 +1,19 @@
 import {
-	EmailService,
+	NodeMailerService,
 	SEND_EMAIL_SUCCESS_RESPONSE,
 	SendEmailInput,
-} from "@/app/email/service/email.service";
+} from "@/lib/node-mailer/service/node-mailer.service";
 import { MailerService } from "@nestjs-modules/mailer";
 import { Test } from "@nestjs/testing";
 
 describe("EmailService", () => {
-	let emailService: EmailService;
+	let nodeMailerService: NodeMailerService;
 	let mailerService: MailerService;
 
 	beforeEach(async () => {
 		const module = await Test.createTestingModule({
 			providers: [
-				EmailService,
+				NodeMailerService,
 				{
 					provide: MailerService,
 					useValue: {
@@ -23,12 +23,12 @@ describe("EmailService", () => {
 			],
 		}).compile();
 
-		emailService = module.get<EmailService>(EmailService);
+		nodeMailerService = module.get<NodeMailerService>(NodeMailerService);
 		mailerService = module.get<MailerService>(MailerService);
 	});
 
 	it("should be defined", () => {
-		expect(emailService).toBeDefined();
+		expect(nodeMailerService).toBeDefined();
 		expect(mailerService).toBeDefined();
 	});
 
@@ -59,7 +59,7 @@ describe("EmailService", () => {
 			);
 
 			// Act
-			const result = await emailService.sendEmail(sendEmailInput);
+			const result = await nodeMailerService.sendEmail(sendEmailInput);
 
 			// Assert
 			expect(result).toBeTruthy();

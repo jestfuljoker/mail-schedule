@@ -1,4 +1,4 @@
-import { plainToInstance } from "class-transformer";
+import { Transform, plainToInstance } from "class-transformer";
 import {
 	IsEnum,
 	IsNotEmpty,
@@ -20,10 +20,11 @@ export class EnvironmentVariables {
 	@IsEnum(NodeEnv)
 	NODE_ENV: NodeEnv;
 
+	@IsOptional()
 	@IsNumber()
 	@Min(0)
 	@Max(65535)
-	@IsOptional()
+	@Transform(({ value }) => Number.parseInt(value, 10))
 	PORT?: number;
 
 	@IsString()
@@ -41,7 +42,31 @@ export class EnvironmentVariables {
 	@IsNumber()
 	@Min(0)
 	@Max(65535)
+	@Transform(({ value }) => Number.parseInt(value, 10))
 	EMAIL_PORT: number;
+
+	@IsString()
+	@IsNotEmpty()
+	DB_USER: string;
+
+	@IsString()
+	@IsNotEmpty()
+	DB_PASSWORD: string;
+
+	@IsString()
+	@IsNotEmpty()
+	DB_NAME: string;
+
+	@IsString()
+	@IsOptional()
+	DB_HOST?: string;
+
+	@IsOptional()
+	@IsNumber()
+	@Min(0)
+	@Max(65535)
+	@Transform(({ value }) => Number.parseInt(value, 10))
+	DB_PORT?: number;
 }
 
 export function validate(config: Record<string, unknown>) {

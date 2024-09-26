@@ -1,15 +1,12 @@
-import { EmailService } from "@/app/email/service/email.service";
 import { EnvironmentVariables } from "@/config/env/env-schema";
-import { EnvModule } from "@/config/env/env.module";
+import { NodeMailerService } from "@/lib/node-mailer/service/node-mailer.service";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { EmailController } from "./email.controller";
 
 @Module({
 	imports: [
 		MailerModule.forRootAsync({
-			imports: [EnvModule],
 			inject: [ConfigService],
 			useFactory: (configService: ConfigService<EnvironmentVariables>) => ({
 				transport: {
@@ -28,7 +25,6 @@ import { EmailController } from "./email.controller";
 			}),
 		}),
 	],
-	providers: [EmailService],
-	controllers: [EmailController],
+	providers: [NodeMailerService],
 })
-export class EmailModule {}
+export class NodeMailerModule {}
