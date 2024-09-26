@@ -1,9 +1,9 @@
 import { join } from "node:path";
 import { EnvironmentVariables, validate } from "@/config/env/env-schema";
-import { NodeMailerModule } from "@/lib/node-mailer/node-mailer.module";
 import { MailModule } from "@/modules/mail/mail.module";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ScheduleModule } from "@nestjs/schedule";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 @Module({
@@ -28,7 +28,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 				};
 			},
 		}),
-		NodeMailerModule,
+		ScheduleModule.forRoot(),
 		MailModule,
 	],
 	controllers: [],

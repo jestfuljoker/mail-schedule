@@ -1,15 +1,15 @@
+import { FindAllMailDTO } from "@/modules/mail/dto/find-all-mail.dto";
 import { MailStatus } from "@/modules/mail/enums/mail-status.enum";
 import { MailEntity } from "@/modules/mail/mail.entity";
 import { MailRepository } from "@/modules/mail/repositories/mail.repository";
 import { faker } from "@faker-js/faker";
 import { DeepPartial } from "typeorm";
 
-export class FakeMailRepository implements MailRepository {
+export class FakeMailRepository extends MailRepository {
 	private mails: MailEntity[] = [];
 
 	private makeMail(model?: DeepPartial<MailEntity>): MailEntity {
 		return {
-			...model,
 			id: faker.string.uuid(),
 			status: MailStatus.WAITING,
 			destinationName: faker.person.fullName(),
@@ -20,6 +20,7 @@ export class FakeMailRepository implements MailRepository {
 			createdAt: faker.date.recent().toISOString(),
 			updatedAt: faker.date.recent().toISOString(),
 			deletedAt: null,
+			...model,
 		};
 	}
 
@@ -34,5 +35,40 @@ export class FakeMailRepository implements MailRepository {
 	async save(model: MailEntity): Promise<MailEntity> {
 		this.mails.push(model);
 		return model;
+	}
+
+	async findAllMailToBeSent(filter?: FindAllMailDTO): Promise<MailEntity[]> {
+		return this.mails.filter((mail) => {
+			if (!filter) {
+				return true;
+			}
+
+			let shouldReturn = true;
+
+			if (filter?.dueDateLte) {
+				shouldReturn = shouldReturn && mail.dueDate <= filter.dueDateLte;
+			}
+
+			if (filter?.status) {
+				shouldReturn = shouldReturn && mail.status === filter.status;
+			}
+
+			return shouldReturn;
+		});
+	}
+
+	async partialUpdate(id: string, partialEntity: Partial<MailEntity>): Promise<void> {
+		const mailIndex = this.mails.findIndex((mail) => mail.id === id);
+
+		if (mailIndex === -1) {
+			return;
+		}
+
+		const updatedMail: MailEntity = {
+			...this.mails[mailIndex],
+			...partialEntity,
+		};
+
+		this.mails.splice(mailIndex, 1, updatedMail);
 	}
 }

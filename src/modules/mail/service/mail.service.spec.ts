@@ -56,4 +56,67 @@ describe("MailService", () => {
 			expect(mailRepository.save).toHaveBeenCalledTimes(1);
 		});
 	});
+
+	describe("findAll", () => {
+		it("should return a mail list with success", async () => {
+			// Arrange
+			const totalMails = faker.number.int({ min: 1, max: 20 });
+
+			await Promise.all(
+				Array.from({ length: totalMails }).map(
+					async () => await mailRepository.save(mailRepository.create()),
+				),
+			);
+
+			// Act
+			const result = await mailService.findAll();
+
+			// Assert
+			expect(result).toHaveLength(totalMails);
+		});
+
+		it("should return a filtered mail list with success", async () => {
+			// Arrange
+			const dueDate = faker.date.future().toISOString();
+			const dateInThePast = faker.date.past({ refDate: new Date() }).toISOString();
+
+			await Promise.all(
+				Array.from({ length: 5 }).map(async (_, index) => {
+					if (index % 2 === 0) {
+						if (index === 2) {
+							return mailRepository.save(
+								mailRepository.create({ dueDate: dateInThePast, status: MailStatus.SENT }),
+							);
+						}
+
+						return mailRepository.save(mailRepository.create({ dueDate: dateInThePast }));
+					}
+
+					return mailRepository.save(mailRepository.create({ dueDate }));
+				}),
+			);
+
+			// Act
+			const result = await mailService.findAll({
+				dueDateLte: new Date().toISOString(),
+				status: MailStatus.WAITING,
+			});
+
+			// Assert
+			expect(result).toHaveLength(2);
+		});
+	});
+
+	describe("updateStatus", () => {
+		it("should update the mail status with success", async () => {
+			// Arrange
+			const mail = await mailRepository.save(mailRepository.create());
+
+			// Act
+			const result = await mailService.updateStatus(mail.id, MailStatus.SENT);
+
+			// Assert
+			expect(result).toBeUndefined();
+		});
+	});
 });
