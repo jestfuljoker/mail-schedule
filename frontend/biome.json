@@ -3,7 +3,8 @@
 	"files": {
 		"include": [
 			"./src/**/*.tsx",
-			"./src/**/*.ts"
+			"./src/**/*.ts",
+			"./tailwind.config.js"
 		]
 	},
 	"organizeImports": {
