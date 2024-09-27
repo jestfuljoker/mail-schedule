@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "~/components/button";
 import { NavLogo } from "~/components/nav";
 
@@ -7,7 +8,15 @@ export function Nav() {
 			<div className="max-w-7xl m-auto h-full flex items-center justify-between">
 				<NavLogo />
 
-				<Button variant="primary">Write now</Button>
+				<div className="flex gap-4 items-center">
+					<Link to="/dashboard">
+						<Button>Dashboard</Button>
+					</Link>
+
+					<Link to="/write-now">
+						<Button variant="primary">Write now</Button>
+					</Link>
+				</div>
 			</div>
 		</nav>
 	);

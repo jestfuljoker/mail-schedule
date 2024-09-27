@@ -4,6 +4,7 @@
 		"include": [
 			"./src/**/*.tsx",
 			"./src/**/*.ts",
+			"./src/**/*.css",
 			"./tailwind.config.js"
 		]
 	},
