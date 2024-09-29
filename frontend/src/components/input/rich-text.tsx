@@ -29,6 +29,7 @@ export function RichText({ label, name }: RichTextProps) {
 							}}
 							config={{
 								readonly: false,
+								language: "pt_br",
 							}}
 						/>
 						<ErrorMessage

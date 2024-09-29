@@ -14,7 +14,7 @@ export function Nav() {
 					</Link>
 
 					<Link to="/write-now">
-						<Button variant="primary">Write now</Button>
+						<Button variant="primary">Escrever agora</Button>
 					</Link>
 				</div>
 			</div>

@@ -1,16 +1,29 @@
 import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { Button } from "~/components/button";
 import { DatePickerInput, Input, RichText } from "~/components/input";
 import { Nav } from "~/components/nav";
+import { mailsService } from "~/services/mails";
 import { type WriteNowValidationFormData, writeNowValidation } from "~/validations";
 
 export function WriteNowPage() {
 	const formMethods = useForm<WriteNowValidationFormData>({
 		resolver: writeNowValidation,
+		defaultValues: {
+			body: "",
+			destinationAddress: "",
+			destinationName: "",
+			subject: "",
+		},
 	});
 
-	function onSubmit(data: WriteNowValidationFormData) {
-		console.log(data);
+	async function onSubmit(data: WriteNowValidationFormData) {
+		const response = await mailsService.sendEmail(data);
+
+		if (response) {
+			formMethods.reset();
+			toast.success("Mensagem programada para ser enviada com sucesso!");
+		}
 	}
 
 	return (
@@ -21,18 +34,22 @@ export function WriteNowPage() {
 
 				<FormProvider {...formMethods}>
 					<form className="form" onSubmit={formMethods.handleSubmit(onSubmit)}>
-						<Input name="destinationName" label="Full name" autoComplete="name" />
+						<Input name="destinationName" label="Nome completo" autoComplete="name" />
 
 						<Input name="destinationAddress" label="E-mail" type="email" autoComplete="email" />
 
-						<DatePickerInput name="dueDate" label="Date" autocomplete="bday-day webauthn" />
+						<DatePickerInput
+							name="dueDate"
+							label="Data de envio"
+							autocomplete="bday-day webauthn"
+						/>
 
-						<Input name="subject" label="Subject" />
+						<Input name="subject" label="Assunto" />
 
-						<RichText name="body" label="Content" />
+						<RichText name="body" label="Conteúdo" />
 
 						<Button type="submit" variant="primary">
-							Send
+							Enviar
 						</Button>
 					</form>
 				</FormProvider>
