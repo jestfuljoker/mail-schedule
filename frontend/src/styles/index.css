@@ -9,7 +9,7 @@ body {
 }
 
 .container {
-  @apply w-full max-w-7xl m-auto py-8;
+  @apply w-full max-w-7xl m-auto py-8 px-4;
 }
 
 .container h1 {
